@@ -175,3 +175,13 @@ for(a in 1:length(airline)){
   write.csv(look.at, file = paste("/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/",name,".csv",sep=""))
   write.csv(look.at, file = paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,".csv",sep=""))
 }
+
+### Next steps:
+### 1) We need to sample from the flight data for each of the airlines
+### 2) We had decided to stratify based on flight origin 
+### 3) Using the csv files generated we can decide how many sampling units we need from 
+### each origin 
+### 4) Then we sample 
+#### a) we need to keep in mind the sampling weights 
+#### b) we will need to keep tract of the fpc 
+### 5) Find a weighted estimate of the mean and standard errors 
