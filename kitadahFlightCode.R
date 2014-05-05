@@ -34,10 +34,6 @@ flights <- tbl(ontime, "flights")
 ###The following code counts the number of flights at a given origin location 
 ### for a given year. 
 
-planes <- group_by(flights, uniquecarrier)
-delay <- summarise(planes, count = n())
-collect(select(delay,-2))
-
 
 origins<-group_by(flights, origin)
 airports<- summarise(origins, count = n())
@@ -72,7 +68,7 @@ for(j in 1:length(origins)){
 }
 look.at[,1:2]
 
-### lets put it in a look now... 
+### lets put it in a loop now... 
 for(i in 1989:2013){
   h=i-1987
   filter.year<-filter(flights, year == i)
@@ -93,3 +89,58 @@ for(i in 1989:2013){
 
 #write.csv(look.at, file = "/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/nflights89_92.csv")
 write.csv(look.at, file = "/Users/heatherhisako1/Documents/bigdata_flightproj/nflights_all.csv")
+
+###We're also going to need to know how many flights a unique airline did in a given
+###year for the sampling frame (ie we need the big N)
+planes <- group_by(flights, uniquecarrier)
+delay <- summarise(planes, count = n())
+unique.airline<-collect(select(delay,-2))
+airline<-unique.airline$uniquecarrier
+length(airline)
+
+years<-c()
+for(i in 1989:2013){
+  years<-c(i, years)
+}
+
+look.at<-matrix(c(rep(0,806)),nrow=31)
+look.at[2:31,1]<-airline
+
+i=1989
+filter.year<-filter(flights, year == i)
+group.carrier<- group_by(filter.year, uniquecarrier)
+unique.per.year.carrier <- summarise(group.carrier, n_carrier = n())
+unique.carrier<-collect(select(unique.per.year.carrier))
+carriers<-unique.carrier$uniquecarrier
+num.cari<-unique.carrier$n_carrier
+look.at[1,2]=i
+for(j in 1:length(carriers)){
+  for(k in 2:31){
+    if(carriers[j]==look.at[k,1]){
+      look.at[k,2]=num.cari[j]
+    }
+  }
+}
+look.at[,1:2]
+
+##Now we need to create a new dataframe for all 25 years 
+for(i in 1989:2013){
+  h=i-1987
+  filter.year<-filter(flights, year == i)
+  group.carrier<- group_by(filter.year, uniquecarrier)
+  unique.per.year.carrier <- summarise(group.carrier, n_carrier = n())
+  unique.carrier<-collect(select(unique.per.year.carrier))
+  carriers<-unique.carrier$uniquecarrier
+  num.cari<-unique.carrier$n_carrier
+  look.at[1,h]=i
+  for(j in 1:length(carriers)){
+    for(k in 2:31){
+      if(carriers[j]==look.at[k,1]){
+        look.at[k,h]=num.cari[j]
+      }
+    }
+  }
+}
+
+write.csv(look.at, file = "/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/ncarriers.csv")
+write.csv(look.at, file = "/Users/heatherhisako1/Documents/bigdata_flightproj/ncarriers.csv")
