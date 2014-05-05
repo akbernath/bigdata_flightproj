@@ -144,3 +144,34 @@ for(i in 1989:2013){
 
 write.csv(look.at, file = "/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/ncarriers.csv")
 write.csv(look.at, file = "/Users/heatherhisako1/Documents/bigdata_flightproj/ncarriers.csv")
+
+####we really need a different table for all of the unique carriers 
+####since we are stratifying over origins 
+str(airline)
+
+for(a in 1:length(airline)){
+  name<-airline[a]
+  look.at<-matrix(c(rep(0,9802)),nrow=377)
+  look.at[2:377,1]<-ports
+  for(i in 1989:2013){
+    h=i-1987
+    filter.year<-filter(flights, (year == i) & (uniquecarrier==name))
+    group.origin<- group_by(filter.year, origin)
+    unique.per.year <- summarise(group.origin, n_origins = n())
+    unique.port<-collect(select(unique.per.year))
+    origins<-unique.port$origin
+    num.ori<-unique.port$n_origin
+    look.at[1,h]=i
+    if(dim(filter.year)[1]>0){
+    for(j in 1:length(origins)){
+      for(k in 2:377){
+        if(origins[j]==look.at[k,1]){
+          look.at[k,h]=num.ori[j]
+        }
+      }
+    }
+  }
+  }
+  write.csv(look.at, file = paste("/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/",name,".csv",sep=""))
+  write.csv(look.at, file = paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,".csv",sep=""))
+}
