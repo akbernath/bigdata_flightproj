@@ -1,8 +1,11 @@
 # 0a: install packages, include necessary ones
 
 # install.packages("RPostgreSQL")
+# install.packages("dplyr")
+# install.packages("reshape2")
 
 library(dplyr)
+library(reshape2)
 
 # 0b: access database
 
@@ -11,10 +14,10 @@ user <- "student"
 password <- "password"
 
 ontime <- src_postgres("ontime",
-  host = endpoint,
-  port = 5432,
-  user = user,
-  password = password)
+                       host = endpoint,
+                       port = 5432,
+                       user = user,
+                       password = password)
 
 flights <- tbl(ontime, "flights")
 as.tbl(head(flights))
@@ -45,10 +48,10 @@ proc.time() - col.tst
 
 year.time <- proc.time()
 flt.small <- filter(flights, year == 2000 ||
-                            year == 2001, uniquecarrier=="WN")
+                      year == 2001, uniquecarrier=="WN")
 flt.yr.small <- group_by(flt.small,year)
 flt.sum.small <- summarise(flt.yr.small,
-                        meandelay = mean(arrdelay+depdelay))
+                           meandelay = mean(arrdelay+depdelay))
 sum.saved <- collect(flt.sum.small)
 arrange(sum.saved, year)
 proc.time() - year.time
@@ -81,8 +84,11 @@ proc.time() - year.time
 year.time <- proc.time()
 flt.grp <- group_by(flights,uniquecarrier,year)
 flt.grp.sum <- summarise(flt.grp,
-                           meandelay = mean(arrdelay+depdelay))
+                         meandelay = mean(arrdelay+depdelay))
 sum.saved <- collect(flt.grp.sum)
-sum.arr <- arrange(arrange(sum.saved, year),uniquecarrier)
-sum.arr
+sum.arr <- as.data.frame(arrange(arrange(sum.saved, year),uniquecarrier))
+sum.tab <- acast(sum.arr, uniquecarrier~year, value.var="meandelay")
+write.csv(round(sum.tab,2), "delaySummaryTable.csv")
 proc.time() - year.time
+
+# mean runtime: 249.34s (2 attempts)??!
