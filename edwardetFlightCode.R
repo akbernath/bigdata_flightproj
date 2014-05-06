@@ -45,16 +45,15 @@ proc.time() - col.tst
 
 year.time <- proc.time()
 flt.small <- filter(flights, year == 2000 ||
-                            year == 2001)
-flt.wn.small <- filter(flt.small, uniquecarrier=="WN")
-flt.yr.small <- group_by(flt.wn.small,year)
+                            year == 2001, uniquecarrier=="WN")
+flt.yr.small <- group_by(flt.small,year)
 flt.sum.small <- summarise(flt.yr.small,
                         meandelay = mean(arrdelay+depdelay))
 sum.saved <- collect(flt.sum.small)
-arrange(sum.saved, year)s
+arrange(sum.saved, year)
 proc.time() - year.time
 
-# mean runtime: 223.86s (1 attempt) [OSU wifi]
+# mean runtime: 226.24s (2 attempts)
 # now to check for FIVE airlines; is it a linear increase?
 # we naively expect a linear increase of 2.5x, roughly
 # if it takes roughly 600s, we're right
@@ -76,3 +75,14 @@ proc.time() - year.time
 # mean runtime: 338.1s (1 attempt) [OSU wifi]
 # this is significantly less than a linear increase!
 # whoop whoop
+
+# now we go for the BIG one:
+
+year.time <- proc.time()
+flt.grp <- group_by(flights,uniquecarrier,year)
+flt.grp.sum <- summarise(flt.grp,
+                           meandelay = mean(arrdelay+depdelay))
+sum.saved <- collect(flt.grp.sum)
+sum.arr <- arrange(arrange(sum.saved, year),uniquecarrier)
+sum.arr
+proc.time() - year.time
