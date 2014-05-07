@@ -84,11 +84,16 @@ proc.time() - year.time
 year.time <- proc.time()
 flt.grp <- group_by(flights,uniquecarrier,year)
 flt.grp.sum <- summarise(flt.grp,
-                         meandelay = mean(arrdelay+depdelay))
+                         meandelay = mean(depdelay + (arrdelay - depdelay)),
+                         depdelay2 = mean(depdelay), arrdelay.adj = mean(arrdelay - depdelay))
 sum.saved <- collect(flt.grp.sum)
 sum.arr <- as.data.frame(arrange(arrange(sum.saved, year),uniquecarrier))
 sum.tab <- acast(sum.arr, uniquecarrier~year, value.var="meandelay")
-write.csv(round(sum.tab,2), "delaySummaryTable.csv")
+sum.tab.de <- acast(sum.arr, uniquecarrier~year, value.var="depdelay2")
+sum.tab.ar <- acast(sum.arr, uniquecarrier~year, value.var="arrdelay.adj")
+write.csv(round(sum.tab,2), "meanTotalDelaySummaryTable.csv")
+write.csv(round(sum.tab.de,2), "meanDepDelaySummaryTable.csv")
+write.csv(round(sum.tab.ar,2), "meanArrDelaySummaryTable.csv")
 proc.time() - year.time
 
 # mean runtime: 249.34s (2 attempts)??!
