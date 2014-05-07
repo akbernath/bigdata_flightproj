@@ -20,7 +20,7 @@ endpoint <- "flights.cwick.co.nz"
 user <- "student"
 password <- "password"
 
-install.packages("RPostgreSQL")
+#install.packages("RPostgreSQL")
 library(RPostgreSQL)
 
 ontime <- src_postgres("ontime", 
@@ -185,3 +185,62 @@ for(a in 1:length(airline)){
 #### a) we need to keep in mind the sampling weights 
 #### b) we will need to keep tract of the fpc 
 ### 5) Find a weighted estimate of the mean and standard errors 
+
+airline<-read.csv("/Users/heatherhisako1/Documents/bigdata_flightproj/AA.csv",header=TRUE)
+head(airline)
+#totals<-c()
+#for(i in 2:26){
+#  totals<-c(totals,sum(airline[,i]))
+#}
+#totals
+totals<-colSums(airline[-1])
+years<-c()
+y.bar.str<-c()
+var.y.bar.str<-c()
+for(i in 1989:2013){
+  h=i-1987
+  k=h-1
+  if(totals[k]>0){
+    y.bar.h<-c()
+    var.y.bar.h<-c()
+    for(j in 1:376){
+      port<-ports[j]
+      how.many<-round((airline[j,h]/totals[k])*1000)
+      if(how.many>0){
+      orig.now<-filter(flights, (year == i & uniquecarrier=="AA" & origin==port))
+      orig.now_random_order<-arrange(orig.now,random())
+      orig.now_samp<-collect(orig.now_random_order,n=as.integer(how.many))
+      orig.now_sum<-summarise(orig.now_samp,n_samp = n(),avg_delay=mean(arrdelay,na.rm=TRUE),sd_delay=sd(arrdelay,na.rm=TRUE))
+      y.bar.h<-c(y.bar.h,(airline[j,h]/totals[k])*orig.now_sum$avg_delay)
+      #(airline[j,h]/totals[k])*orig.now_sum$avg_delay 
+      #this is the stratfied mean
+      #note: this is a weighted mean
+      var.y.bar.h<-c(var.y.bar.h,(1-(how.many/airline[j,h]))*((airline[j,h]/totals[k])^2)*((orig.now_sum$sd_delay^2)/how.many))
+      #(1-(how.many/airline[j,h]))*((airline[j,h]/totals[k])^2)*((orig.now_sum$sd_delay^2)/how.many)
+      #this is the stratified variance 
+      #note this variance is weighted
+      }else{
+      y.bar.h<-c(y.bar.h,NA)
+      var.y.bar.h<-c(var.y.bar.h,NA)
+    }
+    print(j)
+    }
+  }else{
+    y.bar.h<-c(NA)
+    var.y.bar.h<-c(NA)
+  }
+  years<-c(years,i)
+  y.bar.str<-c( y.bar.str,sum( y.bar.h,na.rm=TRUE))
+  var.y.bar.str<-c(var.y.bar.str,sum(var.y.bar.h,na.rm=TRUE))
+  
+}
+##ran this for AA (american airlines) in 1989 
+##mean_str=6.175097
+##var_str=0.6658089
+##took ~2.25 hours to sample 
+##we need to figure out a better way to do this
+##I think the strata are too small...
+##The sampling is definitely the rate limiting step 
+
+
+
