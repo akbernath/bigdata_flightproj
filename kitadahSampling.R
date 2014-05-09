@@ -315,3 +315,11 @@ med.mat<-cbind(unique,all.change)
 
 #order medians
 sort.med<-med.mat[order(all.change),]
+
+#only 25 years
+med.mat_25<-med.mat[c(2,4,8,25,26,28),]
+#Delt is the best
+#Followed by American Airlines, then Alaska Airlines
+#Note: the top three are really close 
+
+
