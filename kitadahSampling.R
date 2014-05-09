@@ -54,7 +54,16 @@ totals<-colSums(airline)
 years<-c()
 y.bar.str<-c()
 var.y.bar.str<-c()
-i=1989
+small.est<-c()
+small.se<-c()
+med.est<-c()
+med.se<-c()
+large.est<-c()
+large.se<-c()
+store.mat<-matrix(c(rep(0,200)),nrow=25)
+colnames(store.mat)<-c("small_est","small_se","med_est","med_est","large_est","large_se","pop_estimate","pop_se")
+rownames(store.mat)<-c(1989:2013)
+for(i in 1989:2013){
   h=i-1987
   k=h-1
   if(totals[k]>0){
@@ -78,8 +87,8 @@ i=1989
         #orig.now_random_order<-arrange(orig.now,random())
         #orig.now_random_order<-filter(orig.now,random()< dec)
         orig.now_samp<-collect(orig.now)
-        ###HELP HELP HELP is there a way that I dont need to collect the random sample? and just summmarise it?
-        orig.now_sum<-summarise(orig.now_samp,n_samp = n(),avg_delay=mean(arrdelay,na.rm=TRUE),sd_delay=sd(arrdelay,na.rm=TRUE))
+        orig.now_trim<-orig.now_samp[1:how.many,]
+        orig.now_sum<-summarise(orig.now_trim,n_samp = n(),avg_delay=mean(arrdelay,na.rm=TRUE),sd_delay=sd(arrdelay,na.rm=TRUE))
         y.bar.h<-c(y.bar.h,(airline[j,k]/totals[k])*orig.now_sum$avg_delay)
         #(airline[j,k]/totals[k])*orig.now_sum$avg_delay 
         #this is the stratfied mean
@@ -92,14 +101,29 @@ i=1989
         y.bar.h<-c(y.bar.h,NA)
         var.y.bar.h<-c(var.y.bar.h,NA)
       }
-      print(j)
     }
   }else{
     y.bar.h<-c(NA)
     var.y.bar.h<-c(NA)
   }
-  years<-c(years,i)
-  y.bar.str<-c( y.bar.str,sum( y.bar.h,na.rm=TRUE))
-  var.y.bar.str<-c(var.y.bar.str,sum(var.y.bar.h,na.rm=TRUE))
-  
+  print(i)
+y.bar.str<-c( y.bar.str,sum( y.bar.h,na.rm=TRUE))
+var.y.bar.str<-c(var.y.bar.str,sum(var.y.bar.h,na.rm=TRUE))
+small.est<-c(small.est,y.bar.h[1])
+small.se<-c(small.se,var.y.bar.h[1])
+med.est<-c(med.est,y.bar.h[2])
+med.se<-c(med.se,var.y.bar.h[2])
+large.est<-c(large.est,y.bar.h[3])
+large.se<-c(large.se,var.y.bar.h[3])
+}
+store.mat[,1]<-small.est
+store.mat[,2]<-small.se
+store.mat[,3]<-med.est
+store.mat[,4]<-med.se
+store.mat[,5]<-large.est
+store.mat[,6]<-large.se
+store.mat[,7]<-y.bar.str
+store.mat[,8]<-var.y.bar.str
+
+
 
