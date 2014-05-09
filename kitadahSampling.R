@@ -129,7 +129,7 @@ write.csv(store.mat, file = paste("/Users/heatherhisako1/Documents/bigdata_fligh
 
 ###Put in BIG LOOP!
 
-for(n in 30:length(unique)){
+for(n in 1:length(unique)){
   name<-unique[n]
   airline.raw<-read.csv(paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,"_size.csv",sep=""),header=TRUE)
   #need to get rid of header(s)
@@ -214,4 +214,24 @@ for(n in 30:length(unique)){
   store.mat[,8]<-var.y.bar.str
   write.csv(store.mat, file = paste("/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/",name,"_strat.csv",sep=""))
   write.csv(store.mat, file = paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,"_strat.csv",sep=""))
+}
+
+#####we're going to need plots
+strat.store<-c()
+for(n in 1:length(unique)){
+  name<-unique[n]
+  airline.raw<-read.csv(paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,"_strat.csv",sep=""),header=TRUE)
+  this.strat<-cbind(airline.raw$pop_estimate,airline.raw$pop_se)
+  colnames(this.strat)<-c(paste(name,"_est",sep=""),paste(name,"_se",sep=""))
+  strat.store<-cbind(strat.store,this.strat)
+  
+}
+write.csv(strat.store, file = paste("/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/all_strat.csv",sep=""))
+write.csv(strat.store, file = paste("/Users/heatherhisako1/Documents/bigdata_flightproj/all_strat.csv",sep=""))
+  
+years<-c(1989:2013)
+plot(years,strat.store[,odd],type="n",ylim=c(-5,18))
+for(i in 1:30){
+  odd=2*i-1
+lines(years,strat.store[,odd],col=as.factor(odd))
 }
