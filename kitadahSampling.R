@@ -198,10 +198,13 @@ for(n in 1:length(unique)){
     y.bar.str<-c( y.bar.str,sum( y.bar.h,na.rm=TRUE))
     var.y.bar.str<-c(var.y.bar.str,sum(var.y.bar.h,na.rm=TRUE))
     small.est<-c(small.est,y.bar.h[1])
+    #note: .se is not standard error.. it is actually variance 
     small.se<-c(small.se,var.y.bar.h[1])
     med.est<-c(med.est,y.bar.h[2])
+    #note: .se is not standard error.. it is actually variance 
     med.se<-c(med.se,var.y.bar.h[2])
     large.est<-c(large.est,y.bar.h[3])
+    #note: .se is not standard error.. it is actually variance 
     large.se<-c(large.se,var.y.bar.h[3])
   }
   store.mat[,1]<-small.est
@@ -222,7 +225,7 @@ for(n in 1:length(unique)){
   name<-unique[n]
   airline.raw<-read.csv(paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,"_strat.csv",sep=""),header=TRUE)
   this.strat<-cbind(airline.raw$pop_estimate,airline.raw$pop_se)
-  colnames(this.strat)<-c(paste(name,"_est",sep=""),paste(name,"_se",sep=""))
+  colnames(this.strat)<-c(paste(name,"_est",sep=""),paste(name,"_var",sep=""))
   strat.store<-cbind(strat.store,this.strat)
   
 }
@@ -233,5 +236,79 @@ years<-c(1989:2013)
 plot(years,strat.store[,odd],type="n",ylim=c(-5,18))
 for(i in 1:30){
   odd=2*i-1
-lines(years,strat.store[,odd],col=as.factor(odd))
+lines(years,strat.store[,odd],lty=as.numeric(odd))
 }
+
+##we should look at changes 
+
+install.packages("Hmisc", dependencies=T)
+library("Hmisc")
+
+for(i in 1:30){
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  carry.se<-sqrt(strat.store[,even])
+  year  = c(1989:2013)
+  mean = carry.mean
+d = data.frame(
+  year  = c(1989:2013),
+  mean = carry.mean,
+  sd = carry.se
+)
+
+# add error bars (without adjusting yrange)
+plot(d$year, d$mean, type="n",ylim=c(-5,18),main=paste(name,"Exploratory Plots for Strata Estimates",sep=" "))
+with (data = d
+      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+)
+lines(year,mean,lty=2)
+}
+
+###lets look at changes
+
+
+for(i in 1:30){
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  mean.final<-carry.mean[2:25]
+  mean.initial<-carry.mean[1:24]
+  mean.change<-mean.final-mean.initial
+  
+  #carry.se<-sqrt(strat.store[,even])
+  year  = c(1990:2013)
+  mean = mean.change
+  
+  # add error bars (without adjusting yrange)
+  plot(year, mean, type="n",ylim=c(min(mean),max(mean)),main=paste(name,"Exploratory Plots for Strata Estimates Changes",sep=" "))
+  #with (data = d
+  #      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+  #)
+  lines(year,mean,lty=2,col="red")
+  abline(h=0,lty=2)
+}
+
+###what about median change overall 
+
+all.change<-c()
+
+
+for(i in 1:30){
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  mean.final<-carry.mean[2:25]
+  mean.initial<-carry.mean[1:24]
+  mean.change<-mean.final-mean.initial
+  for(j in 1:24){
+    if(as.numeric(mean.change[j])==0){
+      mean.change[j]=NA
+    }
+  }
+  all.change<-c(all.change,as.numeric(quantile(mean.change,.5,na.rm=TRUE)))
+}
+med.mat<-cbind(unique,all.change)
