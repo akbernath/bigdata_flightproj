@@ -312,3 +312,6 @@ for(i in 1:30){
   all.change<-c(all.change,as.numeric(quantile(mean.change,.5,na.rm=TRUE)))
 }
 med.mat<-cbind(unique,all.change)
+
+#order medians
+sort.med<-med.mat[order(all.change),]
