@@ -71,10 +71,13 @@ i=1989
         ports<-large
       }
       how.many<-round((airline[j,k]/totals[k])*1000)
+      dec<-how.many/airline[j,k]
+      dec<-as.numeric(2*dec)
       if(how.many>0){
-        orig.now<-filter(flights, (year == i )&(uniquecarrier=="AA" )&(origin%in% ports))
-        orig.now_random_order<-arrange(orig.now,random())
-        orig.now_samp<-collect(orig.now_random_order,n=as.integer(how.many))
+        orig.now<-filter(flights, (year == as.integer(i) )&(uniquecarrier=="AA" )&(origin%in% ports)&(random()< dec))
+        #orig.now_random_order<-arrange(orig.now,random())
+        #orig.now_random_order<-filter(orig.now,random()< dec)
+        orig.now_samp<-collect(orig.now)
         ###HELP HELP HELP is there a way that I dont need to collect the random sample? and just summmarise it?
         orig.now_sum<-summarise(orig.now_samp,n_samp = n(),avg_delay=mean(arrdelay,na.rm=TRUE),sd_delay=sd(arrdelay,na.rm=TRUE))
         y.bar.h<-c(y.bar.h,(airline[j,k]/totals[k])*orig.now_sum$avg_delay)
