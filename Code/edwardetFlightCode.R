@@ -95,3 +95,48 @@ write.csv(psd.out, "Data/popSd.csv")
 proc.time() - year.time
 
 # mean runtime: 384.87s (1 attempt)
+# now to create an aggregate table
+
+PopMeans <- read.csv("Data/popMean.csv")
+PopSds <- read.csv("Data/popSd.csv")
+SampDat <- read.csv("all_strat.csv")
+
+# using heather's code to find a sorted list of unique carriers:
+
+planes <- group_by(flights, uniquecarrier)
+delay <- summarise(planes, count = n())
+unique.airline<-collect(delay)
+base.coln <-unique.airline$uniquecarrier
+base.rown <- PopMeans[,1]
+
+heig <- length(base.rown) - 2
+leng <- length(base.coln)*4
+matnum <- rep(numeric(heig), leng)
+mat <- matrix(matnum, ncol = leng)
+final.tab <- as.data.frame(mat)
+
+# now to input our data!
+
+j=0;
+while (j < leng/4){
+  final.tab[4*j+1] = PopMeans[3:27,j+2]
+  final.tab[4*j+2] = PopSds[3:27,j+2]
+  final.tab[4*j+3] = SampDat[,2*j+2]
+  final.tab[4*j+4] = SampDat[,2*j+3]
+  j=j+1;
+}
+
+# we have a working data frame! now to make it readable
+
+rownames(final.tab) <- base.rown[3:27]
+
+j=0;
+while (j < leng/4) {  
+  colnames(final.tab)[4*j+1] = paste(base.coln[j+1], "_pop.mean", sep="")
+  colnames(final.tab)[4*j+2] = paste(base.coln[j+1], "_pop.sd", sep="")
+  colnames(final.tab)[4*j+3] = paste(base.coln[j+1], "_samp.mean", sep="")
+  colnames(final.tab)[4*j+4] = paste(base.coln[j+1], "_samp.sd", sep="")
+  j=j+1;
+}
+
+write.csv(final.tab, "Data/aggregate.csv")
