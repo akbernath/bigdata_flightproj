@@ -140,3 +140,138 @@ while (j < leng/4) {
 }
 
 write.csv(final.tab, "Data/aggregate.csv")
+
+# we've gotten the data into one place; time to get some GRAPHS
+# modifying heather's code to do this:
+
+aggr <- read.csv("Data/aggregate.csv")
+aggr[is.na(aggr)] <- 0
+
+# install.packages("Hmisc", dependencies=T)
+library("Hmisc")
+
+# for(i in 0:29){
+#   name<-base.coln[i+1]
+#   pop.mean <- aggr[, 4*i + 2]
+#   pop.se <- aggr[, 4*i + 3]
+#   samp.mean <- aggr[, 4*i + 4]
+#   samp.se <- aggr[, 4*i + 5]
+#   d.p = data.frame(
+#     year  = base.rown[3:27],
+#     mean = pop.mean,
+#     sd = pop.se
+#   )
+#   d.s = data.frame(
+#     year = base.rown[3:27],
+#     mean = samp.mean,
+#     sd = samp.se
+#   )
+#   Sys.sleep(0.1)
+#   plot(d.s$year, d.s$mean, type="n",ylim=c(-5,18),main=paste(name,"Exploratory Plots for Strata Estimates",sep=" "))
+#   with (data = d.s
+#         ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+#   )
+#   Sys.sleep(0.1)
+#   plot(d.p$year, d.p$mean, type="n",ylim=c(-5,18),main=paste(name,"Exploratory Plots for Strata Estimates",sep=" "))
+#   with (data = d.p
+#         ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+#   )
+#   lines(base.rown[3:27],samp.mean,lty=2)
+# }
+
+# the SD for a population graph is ENORMOUS, enough to cover the display!
+# maybe we shouldn't use this part in particular...
+# still, it shows how close heather's sampling estimates were!
+
+# moving on to the next section:
+old.par <- par(mfrow=c(1,2))
+for(i in c(0:13,15:29)){
+  name<-base.coln[i+1]
+  pop.mean <- aggr[, 4*i + 2]
+  samp.mean <- aggr[, 4*i + 4]
+  mean.pop.final <- pop.mean[2:25]
+  mean.pop.initial<-pop.mean[1:24]
+  mean.samp.final <- samp.mean[2:25]
+  mean.samp.initial <- samp.mean[1:24]
+  mean.pop.change <- mean.pop.final - mean.pop.initial
+  mean.samp.change <- mean.samp.final - mean.samp.initial
+  
+  #carry.se<-sqrt(strat.store[,even])
+  year  = c(1990:2013)
+  mean.p = mean.pop.change
+  mean.s = mean.samp.change
+  
+  # add error bars (without adjusting yrange)
+  means <- c(mean.s,mean.p)
+  pdf(paste("Graphs/meanDiff_",name,".pdf",sep=""))
+  par(mfrow=c(2,1))
+  plot(year, mean.s, type="n",ylim=c(min(means),max(means)),main=paste(name,"Exploratory Plots for Strata Estimates Changes",sep=" "))
+  #with (data = d
+  #      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+  #)
+  lines(year,mean.s,lty=2,col="red")
+  abline(h=0,lty=2)
+  Sys.sleep(0.1)
+  plot(year, mean.p, type="n",ylim=c(min(means),max(means)),main=paste(name,"Exploratory Plots for Population Mean Changes",sep=" "))
+  #with (data = d
+  #      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+  #)
+  lines(year,mean.p,lty=2,col="red")
+  abline(h=0,lty=2)
+  Sys.sleep(0.1)
+  dev.off()
+}
+par(old.par)
+graphics.off()
+
+# and finally, median change!
+
+all.pop.change <- c()
+all.samp.change <- c()
+
+for(i in 0:29){
+  name<-base.coln[i+1]
+  pop.mean <- aggr[, 4*i + 2]
+  samp.mean <- aggr[, 4*i + 4]
+  mean.pop.final <- pop.mean[2:25]
+  mean.pop.initial<-pop.mean[1:24]
+  mean.samp.final <- samp.mean[2:25]
+  mean.samp.initial <- samp.mean[1:24]
+  mean.pop.change <- mean.pop.final - mean.pop.initial
+  mean.samp.change <- mean.samp.final - mean.samp.initial
+  for(j in 1:24){
+    if(as.numeric(mean.pop.change[j])==0){
+      mean.pop.change[j]=NA
+    }
+    if(as.numeric(mean.samp.change[j])==0){
+      mean.samp.change[j]=NA
+    }
+  }
+  all.pop.change<-c(all.pop.change,as.numeric(quantile(mean.pop.change,.5,na.rm=TRUE)))
+  all.samp.change<-c(all.samp.change,as.numeric(quantile(mean.samp.change,.5,na.rm=TRUE)))
+}
+med.mat<-cbind(base.coln,all.pop.change,all.samp.change)
+
+# order medians
+# by pop.
+sort.pop.med <- med.mat[order(all.pop.change),]
+# and by samp.
+sort.samp.med <- med.mat[order(all.samp.change),]
+  
+sort.pop.med
+sort.samp.med
+
+#only 25 years
+med.mat_25<-med.mat[c(2,4,8,25,26,28),]
+med.mat_25
+#SAMPLE:
+#Delt is the best
+#Followed by American Airlines, then Alaska Airlines
+#Note: the top three are really close 
+
+#POPULATION:
+#US is the best
+#Followed by United, then Southwest
+#Only barely underneath 0; American looks largely above 0!
+
+#Differences in our metric between population and sampling...?
