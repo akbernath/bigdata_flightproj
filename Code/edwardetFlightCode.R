@@ -279,3 +279,5 @@ med.mat_25
 #Only barely underneath 0; American looks largely above 0!
 
 #Differences in our metric between population and sampling...?
+
+write.csv(sort.pop.med, "Data/medianOutput.csv")
