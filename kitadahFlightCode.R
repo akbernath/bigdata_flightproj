@@ -33,7 +33,7 @@ flights <- tbl(ontime, "flights")
 
 ###The following code counts the number of flights at a given origin location 
 ### for a given year. 
-
+### this is for the sampling frame
 
 origins<-group_by(flights, origin)
 airports<- summarise(origins, count = n())
@@ -243,4 +243,56 @@ for(i in 1989:2013){
 ##The sampling is definitely the rate limiting step 
 
 
+#Lets stratify on airport "size" 
+nflights<-read.csv("/Users/heatherhisako1/Documents/bigdata_flightproj/nflights_all.csv",header=TRUE)
+head(nflights)
+dim(nflights)
+averages<-c()
+for(i in 1:376){
+  averages<-c(averages,mean(as.numeric(nflights[i,2:26]),na.rm=TRUE))
+}
+avg_nflights<-cbind(nflights,averages)
+attach(avg_nflights)
+head(avg_nflights)
+sort.avg<-avg_nflights[order(averages),]
+head(sort.avg)
+small<-as.character(sort.avg[1:126,1])
+small.range<-sort.avg[1:126,27]
+med<-as.character(sort.avg[127:251,1])
+med.range<-sort.avg[127:251,27]
+large<-as.character(sort.avg[252:376,1])
+large.range<-sort.avg[252:376,27]
 
+### Need new frame for the airport sizes... 
+for(a in 18:length(airline)){
+  name<-airline[a]
+  look.at<-matrix(c(rep(0,104)),nrow=4)
+  look.at[,1]<-c("","Small","Med","Large")
+  for(i in 1989:2013){
+    k=i-1987
+look.at[1,k]<-i
+for(h in 1:3){
+  if(h==1){#small airports
+    filter.size<-filter(flights, (year == i) & (uniquecarrier==name)&(origin %in% small))
+    unique.per.size <- summarise(filter.size, n_size = n())
+    unique.size<-collect(select(unique.per.size))
+    look.at[2,k]<-unique.size$n_size
+  }
+  if(h==2){#med airports
+    filter.size<-filter(flights, (year == i) & (uniquecarrier==name)&(origin %in% med))
+    unique.per.size <- summarise(filter.size, n_size = n())
+    unique.size<-collect(select(unique.per.size))
+    look.at[3,k]<-unique.size$n_size
+  }
+  if(h==3){#large airports
+    filter.size<-filter(flights, (year == i) & (uniquecarrier==name)&(origin %in% large))
+    unique.per.size <- summarise(filter.size, n_size = n())
+    unique.size<-collect(select(unique.per.size))
+    look.at[4,k]<-unique.size$n_size
+  }
+ 
+}
+}
+write.csv(look.at, file = paste("/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/",name,"_size.csv",sep=""))
+write.csv(look.at, file = paste("/Users/heatherhisako1/Documents/bigdata_flightproj/",name,"_size.csv",sep=""))
+}
