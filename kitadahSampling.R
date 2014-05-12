@@ -1,5 +1,7 @@
 #Heather Kitada
 #Code for creating stratified sample 
+
+##run the following to connect to the database
 library(dplyr)
 
 endpoint <- "flights.cwick.co.nz"
@@ -21,6 +23,7 @@ flights <- tbl(ontime, "flights")
 planes <- group_by(flights, uniquecarrier)
 delay <- summarise(planes, count = n())
 unique.airline<-collect(select(delay,-2))
+#unique is a list of airline abbriviations
 unique<-unique.airline$uniquecarrier
 
 ###code needed for setting airport sizes
@@ -33,12 +36,16 @@ for(i in 1:376){
 avg_nflights<-cbind(nflights,averages)
 attach(avg_nflights)
 head(avg_nflights)
+#orders airports by average traffic
 sort.avg<-avg_nflights[order(averages),]
 head(sort.avg)
+#first third is "small"
 small<-as.character(sort.avg[1:126,1])
 small.range<-sort.avg[1:126,27]
+#middle third is "medium"
 med<-as.character(sort.avg[127:251,1])
 med.range<-sort.avg[127:251,27]
+#last third is "large"
 large<-as.character(sort.avg[252:376,1])
 large.range<-sort.avg[252:376,27]
 
@@ -51,9 +58,12 @@ colnames(airline)<-c(1989:2013)
 rownames(airline)<-c("small","med","large")
 
 totals<-colSums(airline)
+#store necessary values for csv
 years<-c()
 y.bar.str<-c()
 var.y.bar.str<-c()
+# .est is estimate
+# .se is sample variance 
 small.est<-c()
 small.se<-c()
 med.est<-c()
@@ -66,6 +76,8 @@ rownames(store.mat)<-c(1989:2013)
 for(i in 1989:2013){
   h=i-1987
   k=h-1
+  #we dont want to divide by zero
+  #so only go into loop if total flights are greater than 0
   if(totals[k]>0){
     y.bar.h<-c()
     var.y.bar.h<-c()
@@ -87,6 +99,8 @@ for(i in 1989:2013){
         #orig.now_random_order<-arrange(orig.now,random())
         #orig.now_random_order<-filter(orig.now,random()< dec)
         orig.now_samp<-collect(orig.now)
+        #we know that by "chance" if we just give the decimal cut off we might not get the right number in sample
+        #so we'll just trim off the extra
         orig.now_trim<-orig.now_samp[1:how.many,]
         orig.now_sum<-summarise(orig.now_trim,n_samp = n(),avg_delay=mean(arrdelay,na.rm=TRUE),sd_delay=sd(arrdelay,na.rm=TRUE))
         y.bar.h<-c(y.bar.h,(airline[j,k]/totals[k])*orig.now_sum$avg_delay)
@@ -116,6 +130,7 @@ med.se<-c(med.se,var.y.bar.h[2])
 large.est<-c(large.est,y.bar.h[3])
 large.se<-c(large.se,var.y.bar.h[3])
 }
+#store into csv
 store.mat[,1]<-small.est
 store.mat[,2]<-small.se
 store.mat[,3]<-med.est
@@ -127,7 +142,7 @@ store.mat[,8]<-var.y.bar.str
 write.csv(store.mat, file = paste("/Users/heatherhisako1/Desktop/OSU/Second Year/Spring 2014/ST 599/9E_strat.csv",sep=""))
 write.csv(store.mat, file = paste("/Users/heatherhisako1/Documents/bigdata_flightproj/9E_strat.csv",sep=""))
 
-###Put in BIG LOOP!
+###Put in BIG LOOP for all airlines over the last 25 years!
 
 for(n in 1:length(unique)){
   name<-unique[n]
