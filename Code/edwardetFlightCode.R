@@ -183,7 +183,7 @@ library("Hmisc")
 # maybe we shouldn't use this part in particular...
 # still, it shows how close heather's sampling estimates were!
 
-# moving on to the next section:
+# moving on to the next section, graphing means:
 old.par <- par(mfrow=c(1,2))
 for(i in c(0:13,15:29)){
   name<-base.coln[i+1]
@@ -205,14 +205,18 @@ for(i in c(0:13,15:29)){
   means <- c(mean.s,mean.p)
   pdf(paste("Graphs/meanDiff_",name,".pdf",sep=""))
   par(mfrow=c(2,1))
-  plot(year, mean.s, type="n",ylim=c(min(means),max(means)),main=paste(name,"Exploratory Plots for Strata Estimates Changes",sep=" "))
+  plot(year, mean.s, type="n",ylim=c(min(means),max(means)),
+       xlab="Year",ylab="Sample Mean", 
+       main=paste("Change in Mean Delay for ",name," Sample",sep=""))
   #with (data = d
   #      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
   #)
   lines(year,mean.s,lty=2,col="red")
   abline(h=0,lty=2)
   Sys.sleep(0.1)
-  plot(year, mean.p, type="n",ylim=c(min(means),max(means)),main=paste(name,"Exploratory Plots for Population Mean Changes",sep=" "))
+  plot(year, mean.p, type="n",ylim=c(min(means),max(means)),
+       xlab="Year",ylab="Population Mean",
+       main=paste("Change in Mean Delay for ",name," Population",sep=""))
   #with (data = d
   #      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
   #)
