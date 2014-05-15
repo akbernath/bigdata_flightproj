@@ -1,0 +1,30 @@
+Meeting 7
+
+Discussion of Presentation
+	4 sections
+		I. QOI & Methods
+			Choosing a metric
+				Mention second metric (briefly), but go with arrival delay
+				Mention keeping negative times
+			Narrowing Scope
+				Ran all airlines and years
+				Only kept airlines with 10+ years consecutive active
+			Yearly avgs. vs. motnhs
+		II. Population Findings
+			Really fast! Originally worried it was running wrong
+		III. Sampling Findings
+			Bias Histogram
+				Sample mean plot with SEs + pop means
+			Stratification Methods
+				Initial choice: 380 airports, unreasonable computation
+				Moved to Sm/Med/Large
+				We think size classes will have smaller delays
+		IV. Obstacles & Discussions
+			Metric for delay in airlines
+				Original thoughts: changeable
+					Started in 2003?
+					Jump from 2007-2008?
+		
+Graphics
+	Set up sample means graph by year (population/sample)
+	Sample means for the six 25-year airlines + CIs + pop. means? (Heather)

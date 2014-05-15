@@ -1,0 +1,11 @@
+Meeting 2
+
+Flight data: sum all delays (by time) and see? Group by year/month, potentially
+
+http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236
+
+We have “depdelay,” which includes early departures as negatives; does this need accounted for?
+
+Ask about editing readme.md to act as a file index too
+
+Sampling: Stratify by airline

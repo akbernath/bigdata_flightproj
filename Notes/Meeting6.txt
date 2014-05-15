@@ -1,0 +1,24 @@
+Heather's data is biased; what do we do?
+	Actually not terribly so; +0.6 minutes for AA
+Population data has HUGE sd!!
+Carrierdelay and lateaircraftdelay NOT VIABLE
+	2007-->2008 has a huge jump for all but weatherdelay!
+
+
+
+Andrew:
+	1. Finish outline
+	2. Graphics?
+	
+Ethan
+	1. Organize *all* arrival means/sd into one aggregate data set
+		Rows: by year
+		Columns: by	
+			*carrier*.pop_mu
+			*carrier*.pop_sd
+			*carrier*.smp_mu
+			*carrier*.smp_sd
+				
+	2. Edit population code 
+		- Comment out test code for now
+		- Add Heather's graphs and medians
