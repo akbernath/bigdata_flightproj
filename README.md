@@ -4,7 +4,6 @@ bigdata_flightproj
 For files relating to the second group project in ST599 - Computing and Analysis of Big Data
 
 ### Final Products
-======
 **The Plight of Flight.pdf:** Deliverable Report
 
 **Project2Pres.pdf:** Presentation
@@ -12,7 +11,6 @@ For files relating to the second group project in ST599 - Computing and Analysis
 **README.md:** Readme / File Index
 
 ### Current Files
-======
 #### Code
 
 Test
@@ -28,7 +26,6 @@ Test
 Test
 
 ## Outdated Files
-======
 #### Code
 **Code/allMeansGraph.R:** A brief visualization method we didn't end up using.
 
