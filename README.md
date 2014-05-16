@@ -13,19 +13,57 @@ For files relating to the second group project in ST599 - Computing and Analysis
 ### Current Files
 #### Code
 
-Test
+**Code/edwardetFlightCode.R:**
+
+**kitadahFlightCode.R:**
+
+**kitadahSampling.R:**
+
+**AB_bias.R:**
+
+**AB_flightcode.R:**
 
 #### Data
 
-Test
+**Data/aggregate.csv:**
+
+**Data/mean_bias.csv:**
+
+**Data/medianOutput.csv:**
+
+**Data/popMean.csv:**
+
+**Data/popSd.csv:**
+
+**all_strat.csv:**
+
+**(carriercode).csv:**
+
+**(carriercode)_size.csv:**
+
+**(carriercode)_strat.csv:**
+
+**nflights_all.csv:**
 
 #### Documents
-Test
+**The Plight of Flight.docx:**
+
+**Project2Pres.tex:**
 
 #### Graphs
-Test
+**Graphs/meanDiff_(carriercode).pdf:**
 
-## Outdated Files
+**airtraffic.pdf:**
+
+**Bias Histogram.pdf:**
+
+**summarySamp.pdf:**
+
+**noline.pdf:**
+
+**popPlot.pdf:**
+
+### Outdated Files
 #### Code
 **Code/allMeansGraph.R:** A brief visualization method we didn't end up using.
 
