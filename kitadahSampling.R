@@ -307,9 +307,10 @@ for(i in 1:30){
   abline(h=0,lty=2)
 }
 
-###what about median change overall 
+###what about median change overall?
 
 all.change<-c()
+#use quantiles to have some understanding of variability 
 q25<-c()
 q75<-c()
 
@@ -341,7 +342,7 @@ med.mat_25<-med.mat[c(2,4,8,25,26,28),]
 #Followed by American Airlines, then Alaska Airlines
 #Note: the top three are really close 
 
-######
+######now makes plots for population parameters 
 
 pop<-read.csv("/Users/heatherhisako1/Documents/bigdata_flightproj/Data/popMean.csv",header=TRUE)
 
@@ -371,6 +372,7 @@ for(i in 1:30){
   points(year,pop.mean,pch=13,col="red")
 }
 
+##lets assess coverage 
 count<-0
 total<-0
 for(i in 1:30){
@@ -398,9 +400,11 @@ count/total
 #coverage = .76 
 #thats not very good :(
 
+##Its only fair to compare airlines that existed during the same time period 
+##The following airlines had flights during the whole 25 years
 ##2,4,8,25,26,28
 color<-c("red","darkorange","darkgoldenrod1","forestgreen","dodgerblue","darkorchid3")
-plot(d$year, d$mean, type="n",ylim=c(-5,18),main="Comparing Population Mean and Stratified Sampling Mean Estimates",xlab="Year",ylab="Mean Arrival Delay")
+plot(d$year, d$mean, type="n",ylim=c(-7,18),main="Comparing Population Mean and Stratified Sampling Mean Estimates",xlab="Year",ylab="Mean Arrival Delay")
 k=-0.3
 h=0
 for(i in c(2,4,8,25,26,28)){
@@ -425,11 +429,11 @@ for(i in c(2,4,8,25,26,28)){
         ,expr = errbar(year+k, mean, mean+2*sd, mean-2*sd, add=T, pch=1, cap=.0,col=color[h],errbar.col=color[h])
   )
   points(year+k,pop.mean,pch=16,col=color[h])
-  lines(year+k,pop.mean,col=color[h])
+  #lines(year+k,pop.mean,col=color[h])
 }
-legend("bottomleft", unique[c(2,4,8,25,26,28)], pch = 20,col=color,ncol=2,title="Unique Carriers",bty="n")
+legend(locator(1), unique[c(2,4,8,25,26,28)], pch = 20,col=color,ncol=2,title="Unique Carriers",bty="n",seg.len=.5,x.intersp=.5,text.width=.25)
 
-###
+###plots all lines on the same plot
 
 plot(years,mean.change,type="n",ylim=c(-15,10),xlab="Year",ylab="Change in Sample Mean Delay",main="Change in Sample Mean Delay for Airlines Existing Over the Past 25 Years ")
 years<-c(1989:2012)
@@ -448,7 +452,7 @@ lines(years,mean.change,col=color[h],lty=1)
 legend(locator(1), unique[c(2,4,8,25,26,28)], lty=1,col=color,ncol=2,title="Unique Carriers",bty="n",seg.len=.5,x.intersp=.5,text.width=.25)
 abline(h=0)
 
-###
+###makes the same plot for population 
 pop<-read.csv("/Users/heatherhisako1/Documents/bigdata_flightproj/Data/popMean.csv",header=TRUE)
 head(pop)
 plot(years,mean.change,type="n",ylim=c(-15,10),xlab="Year",ylab="Change in Population Mean Delay",main="Change in Population Mean Delay for Airlines Existing Over the Past 25 Years ")
@@ -474,7 +478,8 @@ for(i in c(2,4,8,25,26,28)){
 legend(locator(1), unique[c(2,4,8,25,26,28)], lty=1,col=color,ncol=2,title="Unique Carriers",bty="n",seg.len=.5,x.intersp=.5,text.width=.25)
 abline(h=0)
 
-###
+###the following is for mean change in population mean 
+###we also use iqr to assess variability 
 all.change<-c()
 q25<-c()
 q75<-c()
@@ -486,6 +491,12 @@ for(i in 1:30){
   mean.final<-carry.mean[2:25]
   mean.initial<-carry.mean[1:24]
   mean.change<-mean.final-mean.initial
+  #print(mean.change)
+  for(j in 1:24){
+    if(as.numeric(mean.change[j])==NA){
+      mean.change[j]=NA
+    }
+  }
   all.change<-c(all.change,round(as.numeric(quantile(mean.change,.5,na.rm=TRUE)),3))
   q25<-c(q25,round(as.numeric(quantile(mean.change,.25,na.rm=TRUE)),3))
   q75<-c(q75,round(as.numeric(quantile(mean.change,.75,na.rm=TRUE)),3))
