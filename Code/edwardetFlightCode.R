@@ -232,6 +232,8 @@ graphics.off()
 
 all.pop.change <- c()
 all.samp.change <- c()
+q25 <- c()
+q75 <- c()
 
 for(i in 0:29){
   name<-base.coln[i+1]
@@ -251,10 +253,14 @@ for(i in 0:29){
       mean.samp.change[j]=NA
     }
   }
-  all.pop.change<-c(all.pop.change,as.numeric(quantile(mean.pop.change,.5,na.rm=TRUE)))
-  all.samp.change<-c(all.samp.change,as.numeric(quantile(mean.samp.change,.5,na.rm=TRUE)))
+  all.pop.change<-c(all.pop.change,round(as.numeric(quantile(mean.pop.change,.5,na.rm=TRUE)),3))
+  pop.q25 <- c(q25, round(as.numeric(quantile(mean.pop.change, 0.25, na.rm=TRUE)),3))
+  pop.q75 <- c(q25, round(as.numeric(quantile(mean.pop.change, 0.75, na.rm=TRUE)),3))
+  all.samp.change<-c(all.samp.change,round(as.numeric(quantile(mean.samp.change,.5,na.rm=TRUE)),3))
+  samp.q25 <- c(q25, round(as.numeric(quantile(mean.samp.change, 0.25, na.rm=TRUE)),3))
+  samp.q75 <- c(q75, round(as.numeric(quantile(mean.samp.change, 0.75, na.rm=TRUE)),3))
 }
-med.mat<-cbind(base.coln,all.pop.change,all.samp.change)
+med.mat<-cbind(base.coln,all.pop.change,pop.q25, pop.q75, all.samp.change, samp.q25, samp.q75)
 
 # order medians
 # by pop.

@@ -71,19 +71,22 @@ Are there any airlines that have shown consistent improvement in delays, across 
 \subsection{Choosing A Metric}
 \begin{frame}
 \frametitle{How do we define "improvement" in delay?}
-Improvement is defined as negative change in delay time, where delay can be measured using the folling metrics:
+\begin{itemize}
+\item Improvement is defined as negative change in delay time, where delay can be measured using the following metrics:
 
 \begin{itemize}
 \item Arrival delay 
 \begin{itemize}
-\item What customers about
+\item What customers care about
 \end{itemize}
 
 OR
 \item Carrier + Late Aircraft delays 
 \begin{itemize}
-\item What carries are able to control 
+\item What carriers are able to control 
 \end{itemize}
+\end{itemize}
+\item Overall improvement metric = Median change in mean delay 
 \end{itemize}
 
 \end{frame}
@@ -92,12 +95,12 @@ OR
 \begin{frame}
 \frametitle{Narrowing Scope}
 \begin{itemize}
-\item Ran all airline and years 
+\item Ran all airlines and years 
 \item Only kept airlines with 10+ years of service 
 \begin{itemize}
-\item 10+ is enougth to discern a pattern
+\item 10+ is enough to discern a pattern
 \end{itemize}
-\item Aggregating to creating yearly averages 
+\item Aggregating to create yearly averages 
 \begin{itemize}
 \item Average over seasonal effects to compare year to year 
 \end{itemize}
@@ -110,8 +113,32 @@ OR
 \section{Population-Based Findings}
 \begin{frame}
 \frametitle{Population-Based Findings}
+\begin{center} 
+\includegraphics[width=1 \textwidth]{popMean}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Population-Based Findings}
+\begin{center} 
+\includegraphics[width=1 \textwidth]{popPlot}
+\end{center}
+
+\end{frame}
+
+\subsection{Patterns}
+\begin{frame}
+\frametitle{Patterns}
 \begin{itemize}
-\item WAITING FOR WORK FROM ETHAN AND ANDREW
+\item Late 90's overall increase
+\item Spike at 2000: possible 9/11
+\item Decrease at 2003-2004
+\item Steadily increased until 2007 
+\begin{itemize}
+\item Rising jet fuel prices 
+\item Great Recession 
+\end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -149,18 +176,28 @@ Assumption: Due to coordination of air traffic control efforts, flights originat
 
 \subsection{Findings}
 \begin{frame}
-\frametitle{Findings}
+\frametitle{Sample Findings}
+\begin{center} 
+\includegraphics[width=1 \textwidth]{stratSampWithSE}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Sample Findings}
 \begin{center} 
 \includegraphics[width=1 \textwidth]{summarySamp}
 \end{center}
 
 \end{frame}
 
+
+
 \subsection{Sampling Performance}
 \begin{frame}
 \frametitle{Sampling Performance: 76\% Coverage}
 \begin{center} 
-\includegraphics[width=1 \textwidth]{coverage}
+\includegraphics[width=1 \textwidth]{noLine}
 \end{center}
 
 \end{frame}
@@ -176,9 +213,38 @@ Assumption: Due to coordination of air traffic control efforts, flights originat
 
 \section{Discussion, Obstacles and Solutions}
 \begin{frame}
-\frametitle{Discussion, Obstacles and Solutions}
+\frametitle{The "Simple" Answer}
 \begin{itemize}
-\item 
+\item No, no one airline carrier is \emph{consistently} improving.
+\item Nor did one airline carrier show \emph{consistent} improvement above all others. 
+\end{itemize}
+
+\end{frame}
+
+\subsection{Cognitive Time vs Computational Time}
+\begin{frame}
+\frametitle{Cognitive Time vs Computational Time}
+\begin{itemize}
+\item Population Summary: ~6m 25s
+\item Sample Summary: ~5.5 hrs 
+\begin{itemize}
+\item Sampling and collecting is slow 
+\item Originally had stratified by airport origins 
+\item Took 2.5 hours to sample from American Airlines in 1989
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\subsection{Data Visualization}
+\begin{frame}
+\frametitle{Data Visualization}
+\begin{itemize}
+\item Combating "spaghetti" plots
+\item Ploting changes in mean delays 
+\begin{itemize}
+\item Think of this as the derivative 
+\end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -187,7 +253,12 @@ Assumption: Due to coordination of air traffic control efforts, flights originat
 \begin{frame}
 \frametitle{Future Work}
 \begin{itemize}
-\item 
+\item Understanding reasons for delay: 
+\begin{itemize}
+\item Comparing sources of delay that carriers can't control with sources of delay that carriers do control 
+\end{itemize}
+\item How one flight arriving late affect its subsequent stops? 
+\item More specific strata, with access to higher computational resources / computation time
 \end{itemize}
 
 \end{frame}
