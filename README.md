@@ -46,6 +46,8 @@ For files relating to the second group project in ST599 - Computing and Analysis
 *nflights_all.csv:* Outgoing flights by airport and year combined, still dependency for some code
 
 #### Documents
+*Notes/:* Notes for all meetings, along with general group information and updated contract
+
 *The Plight of Flight.docx:* .docx for project deliverable
 
 *Project2Pres.tex:* .tex for project presentaiton
