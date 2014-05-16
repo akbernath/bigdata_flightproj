@@ -58,6 +58,6 @@ ggplot(data=na.exclude(aggr)) +
   geom_line(aes(y = TW_pop.mean, x=X, colour="Trans World")) +
   geom_line(aes(y = UA_pop.mean, x=X, colour="United")) +
   geom_line(aes(y = US_pop.mean, x=X, colour="US")) +
-  ggtitle("Mean Delay By Year (25 year, population)") +
+  ggtitle("Mean Delay By Year (10 year, population)") +
   theme_minimal() + xlab("Year") + ylab("Mean Delay (minutes)")
 dev.off()
