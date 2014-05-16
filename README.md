@@ -4,107 +4,107 @@ bigdata_flightproj
 For files relating to the second group project in ST599 - Computing and Analysis of Big Data
 
 ### Final Products
-**The Plight of Flight.pdf:** Deliverable Report
+*The Plight of Flight.pdf:* Deliverable Report
 
-**Project2Pres.pdf:** Presentation
+*Project2Pres.pdf:* Presentation
 
-**README.md:** Readme / File Index
+*README.md:* Readme / File Index
 
 ### Current Files
 #### Code
 
-**Code/edwardetFlightCode.R:**
+*Code/edwardetFlightCode.R:**
 
-**kitadahFlightCode.R:**
+*kitadahFlightCode.R:*
 
-**kitadahSampling.R:**
+*kitadahSampling.R:*
 
-**AB_bias.R:**
+*AB_bias.R:*
 
-**AB_flightcode.R:**
+*AB_flightcode.R:*
 
 #### Data
 
-**Data/aggregate.csv:**
+*Data/aggregate.csv:*
 
-**Data/mean_bias.csv:**
+*Data/mean_bias.csv:*
 
-**Data/medianOutput.csv:**
+*Data/medianOutput.csv:*
 
-**Data/popMean.csv:**
+*Data/popMean.csv:*
 
-**Data/popSd.csv:**
+*Data/popSd.csv:*
 
-**all_strat.csv:**
+*all_strat.csv:*
 
-**(carriercode).csv:**
+*(carriercode).csv:*
 
-**(carriercode)_size.csv:**
+*(carriercode)_size.csv:*
 
-**(carriercode)_strat.csv:**
+*(carriercode)_strat.csv:*
 
-**nflights_all.csv:**
+*nflights_all.csv:*
 
 #### Documents
-**The Plight of Flight.docx:**
+*The Plight of Flight.docx:*
 
-**Project2Pres.tex:**
+*Project2Pres.tex:*
 
 #### Graphs
-**Graphs/meanDiff_(carriercode).pdf:**
+*Graphs/meanDiff_(carriercode).pdf:*
 
-**airtraffic.pdf:**
+*airtraffic.pdf:*
 
-**Bias Histogram.pdf:**
+*Bias Histogram.pdf:*
 
-**summarySamp.pdf:**
+*summarySamp.pdf:*
 
-**noline.pdf:**
+*noline.pdf:*
 
-**popPlot.pdf:**
+*popPlot.pdf:*
 
 ### Outdated Files
 #### Code
-**Code/allMeansGraph.R:** A brief visualization method we didn't end up using.
+*Code/allMeansGraph.R:* A brief visualization method we didn't end up using.
 
-**flight_pop.R:** Andrew's original exploratory code
+*flight_pop.R:* Andrew's original exploratory code
 
 #### Data
-**carrierdelaySummaryTable.csv:** csv for carrierdelay (didn't use metric)
+*carrierdelaySummaryTable.csv:* csv for carrierdelay (didn't use metric)
 
-**carrierdelaySummaryTable.xls:** Formatted display table for carrierdelay (didn't use metric)
+*carrierdelaySummaryTable.xls:* Formatted display table for carrierdelay (didn't use metric)
 
-**meanDepDelaySummaryTable.csv:** csv for departure delay metric (outdated metric)
+*meanDepDelaySummaryTable.csv:* csv for departure delay metric (outdated metric)
 
-**meanDepDelaySummaryTable.xls:** Formatted display table for departure delay metric (outdated metric)
+*meanDepDelaySummaryTable.xls:* Formatted display table for departure delay metric (outdated metric)
 
-**meanTotalDelaySummaryTable.csv:** csv for "total" delay metric (outdated metric)
+*meanTotalDelaySummaryTable.csv:* csv for "total" delay metric (outdated metric)
 
-**meanTotalDelaySummaryTable.xls:** Formatted display table for "total" delay metric (outdated metric)
+*meanTotalDelaySummaryTable.xls:* Formatted display table for "total" delay metric (outdated metric)
 
-**delaySummaryTable.csv:** csv for secondary delay metric (outdated)
+*delaySummaryTable.csv:* csv for secondary delay metric (outdated)
 
-**delaySummaryTable.xls:** Formatted display table for secondary delay metric (personal display only)
+*delaySummaryTable.xls:* Formatted display table for secondary delay metric (personal display only)
 
-**meanArrDelaySummaryTable.csv:** (outdated, better code written)
+*meanArrDelaySummaryTable.csv:* (outdated, better code written)
 
-**meanArrDelaySummaryTable.xls:** Updated version of delaySummaryTable.xls (personal display only)
+*meanArrDelaySummaryTable.xls:* Updated version of delaySummaryTable.xls (personal display only)
 
-**nflights_all_withHeat.xls:** Heatmap of number of flights by carrier (early, personal use, outdated)
+*nflights_all_withHeat.xls:* Heatmap of number of flights by carrier (early, personal use, outdated)
 
-**ncarriers.csv:** Flights by carrier by year (early, outdated)
+*ncarriers.csv:* Flights by carrier by year (early, outdated)
 
 #### Documents
-**TeamExpectations2.pdf:** Heather's example of Team Expectations
+*TeamExpectations2.pdf:* Heather's example of Team Expectations
 
-**TeamExpectations2.tex:** Raw TeX for above file
+*TeamExpectations2.tex:* Raw TeX for above file
 	
 
 #### Graphs
-**Graphs/10MeansPop.pdf:** overlaid means of all airlines with 10+ years data (didn't use)
+*Graphs/10MeansPop.pdf:* overlaid means of all airlines with 10+ years data (didn't use)
 
-**Graphs/25MeansPop.pdf:** overlaid means of all airlines with 25 years data (didn't use)
+*Graphs/25MeansPop.pdf:* overlaid means of all airlines with 25 years data (didn't use)
 
-**bias.pdf:** Bias histogram (old version)
+*bias.pdf:* Bias histogram (old version)
 
-**coverage.pdf:** Sample means + IQR vs. population means (old version)
+*coverage.pdf:* Sample means + IQR vs. population means (old version)
