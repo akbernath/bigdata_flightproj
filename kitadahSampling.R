@@ -276,8 +276,9 @@ d = data.frame(
 # add error bars (without adjusting yrange)
 plot(d$year, d$mean, type="n",ylim=c(-5,18),main=paste(name,"Exploratory Plots for Strata Estimates",sep=" "))
 with (data = d
-      ,expr = errbar(year, mean, mean+sd, mean-sd, add=T, pch=1, cap=.05)
+      ,expr = errbar(year, mean, mean+1.96*sd, mean-1.96*sd, add=T, pch=1, cap=.05)
 )
+
 lines(year,mean,lty=2)
 }
 
@@ -309,7 +310,8 @@ for(i in 1:30){
 ###what about median change overall 
 
 all.change<-c()
-
+q25<-c()
+q75<-c()
 
 for(i in 1:30){
   name<-unique[i]
@@ -324,9 +326,11 @@ for(i in 1:30){
       mean.change[j]=NA
     }
   }
-  all.change<-c(all.change,as.numeric(quantile(mean.change,.5,na.rm=TRUE)))
+  all.change<-c(all.change,round(as.numeric(quantile(mean.change,.5,na.rm=TRUE)),3))
+  q25<-c(q25,round(as.numeric(quantile(mean.change,.25,na.rm=TRUE)),3))
+  q75<-c(q75,round(as.numeric(quantile(mean.change,.75,na.rm=TRUE)),3))
 }
-med.mat<-cbind(unique,all.change)
+med.mat<-cbind(unique,all.change,q25,q75)
 
 #order medians
 sort.med<-med.mat[order(all.change),]
@@ -337,4 +341,157 @@ med.mat_25<-med.mat[c(2,4,8,25,26,28),]
 #Followed by American Airlines, then Alaska Airlines
 #Note: the top three are really close 
 
+######
+
+pop<-read.csv("/Users/heatherhisako1/Documents/bigdata_flightproj/Data/popMean.csv",header=TRUE)
+
+
+for(i in 1:30){
+  j=i+1
+  pop.mean<-pop[3:27,j]
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  carry.se<-sqrt(strat.store[,even])
+  year  = c(1989:2013)
+  mean = carry.mean
+  d = data.frame(
+    year  = c(1989:2013),
+    mean = carry.mean,
+    sd = carry.se
+  )
+  
+  # add error bars (without adjusting yrange)
+  plot(d$year, d$mean, type="n",ylim=c(-5,18),main=paste(name,"Exploratory Plots for Strata Estimates",sep=" "))
+  with (data = d
+        ,expr = errbar(year, mean, mean+2*sd, mean-2*sd, add=T, pch=1, cap=.0)
+  )
+  lines(year,mean,lty=2)
+  points(year,pop.mean,pch=13,col="red")
+}
+
+count<-0
+total<-0
+for(i in 1:30){
+  j=i+1
+  pop.mean<-pop[3:27,j]
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  carry.se<-sqrt(strat.store[,even])
+  year  = c(1989:2013)
+  mean = carry.mean
+  for(k in 1:25){
+    if(carry.se[k]>0){
+      total<-total+1
+    if((carry.mean[k]-2*carry.se[k])<pop.mean[k]&(carry.mean[k]+2*carry.se[k])>pop.mean[k]){
+      count<-count+1
+    }
+    }
+    
+  }
+}
+count/total
+
+#coverage = .76 
+#thats not very good :(
+
+##2,4,8,25,26,28
+color<-c("red","darkorange","darkgoldenrod1","forestgreen","dodgerblue","darkorchid3")
+plot(d$year, d$mean, type="n",ylim=c(-5,18),main="Comparing Population Mean and Stratified Sampling Mean Estimates",xlab="Year",ylab="Mean Arrival Delay")
+k=-0.3
+h=0
+for(i in c(2,4,8,25,26,28)){
+  k=k+0.05
+  h=h+1
+  j=i+1
+  pop.mean<-pop[3:27,j]
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  carry.se<-sqrt(strat.store[,even])
+  year  = c(1989:2013)
+  mean = carry.mean
+  d = data.frame(
+    year  = c(1989:2013),
+    mean = carry.mean,
+    sd = carry.se
+  )
+  # add error bars (without adjusting yrange)
+  with (data = d
+        ,expr = errbar(year+k, mean, mean+2*sd, mean-2*sd, add=T, pch=1, cap=.0,col=color[h],errbar.col=color[h])
+  )
+  points(year+k,pop.mean,pch=16,col=color[h])
+  lines(year+k,pop.mean,col=color[h])
+}
+legend("bottomleft", unique[c(2,4,8,25,26,28)], pch = 20,col=color,ncol=2,title="Unique Carriers",bty="n")
+
+###
+
+plot(years,mean.change,type="n",ylim=c(-15,10),xlab="Year",ylab="Change in Sample Mean Delay",main="Change in Sample Mean Delay for Airlines Existing Over the Past 25 Years ")
+years<-c(1989:2012)
+h=0
+for(i in c(2,4,8,25,26,28)){
+  h=h+1
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-strat.store[,odd]
+  mean.final<-carry.mean[2:25]
+  mean.initial<-carry.mean[1:24]
+  mean.change<-mean.final-mean.initial
+lines(years,mean.change,col=color[h],lty=1)
+}
+legend(locator(1), unique[c(2,4,8,25,26,28)], lty=1,col=color,ncol=2,title="Unique Carriers",bty="n",seg.len=.5,x.intersp=.5,text.width=.25)
+abline(h=0)
+
+###
+pop<-read.csv("/Users/heatherhisako1/Documents/bigdata_flightproj/Data/popMean.csv",header=TRUE)
+head(pop)
+plot(years,mean.change,type="n",ylim=c(-15,10),xlab="Year",ylab="Change in Population Mean Delay",main="Change in Population Mean Delay for Airlines Existing Over the Past 25 Years ")
+years<-c(1989:2012)
+h=0
+for(i in c(2,4,8,25,26,28)){
+  j=i+1
+  h=h+1
+  name<-unique[i]
+  odd=2*i-1
+  even=2*i
+  carry.mean<-pop[3:27,j]
+  mean.final<-carry.mean[2:25]
+  mean.initial<-carry.mean[1:24]
+  mean.change<-mean.final-mean.initial
+  lines(years,mean.change,col=color[h],lty=1)
+  #carry.mean2<-strat.store[,odd]
+  #mean.final2<-carry.mean2[2:25]
+  #mean.initial2<-carry.mean2[1:24]
+  #mean.change2<-mean.final2-mean.initial2
+  #lines(years,mean.change2,col=color[h],lty=2)
+}
+legend(locator(1), unique[c(2,4,8,25,26,28)], lty=1,col=color,ncol=2,title="Unique Carriers",bty="n",seg.len=.5,x.intersp=.5,text.width=.25)
+abline(h=0)
+
+###
+all.change<-c()
+q25<-c()
+q75<-c()
+
+for(i in 1:30){
+  k=i+1
+  name<-unique[i]
+  carry.mean<-pop[3:27,k]
+  mean.final<-carry.mean[2:25]
+  mean.initial<-carry.mean[1:24]
+  mean.change<-mean.final-mean.initial
+  all.change<-c(all.change,round(as.numeric(quantile(mean.change,.5,na.rm=TRUE)),3))
+  q25<-c(q25,round(as.numeric(quantile(mean.change,.25,na.rm=TRUE)),3))
+  q75<-c(q75,round(as.numeric(quantile(mean.change,.75,na.rm=TRUE)),3))
+}
+med.mat<-cbind(unique,all.change,q25,q75)
+
+#order medians
+sort.med<-med.mat[order(all.change),]
 
